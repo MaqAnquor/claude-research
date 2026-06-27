@@ -9,6 +9,8 @@ argument-hint: "[project-name or no arguments for guided setup]"
 
 Interview-driven skill that scaffolds a research project directory, creates an Atlas topic, syncs to vault (Atlas + Pipeline + Venues), and integrates with the user's Task Management system.
 
+**Scope pre-flight.** During the interview (Phase 1), read the global paper scope checklist at `~/Task-Management/.context/paper-scope-checklist.md` (resolve the TM root via `cat ~/.config/task-mgmt/path`) and apply its eight gates to the proposed project — confirm a one-sentence research question and right-sized contributions before scaffolding. Flag (don't block) any failed gate so the project starts with scope discipline set.
+
 ## When to Use
 
 - Starting a new research paper or project from scratch

@@ -129,14 +129,14 @@ When `--double-blind` is set OR when a `paper-*` directory's vault submission fr
 5. **Output format:**
    ```
    ⚠ SELF-CITATION DEANONYMIZATION (Critical)
-     references.bib:42  burnat2026paradox
-       authors:    the user A D Burnat and Brittany I [Collaborator]
-       overlaps:   Burnat (1/1), [Collaborator] (1/1) → ALL submission authors named
+     references.bib:42  smith2026paradox
+       authors:    Alex P Smith and Jordan K Lee
+       overlaps:   Smith (1/1), Lee (1/1) → ALL submission authors named
        remediation:
          author = {Anonymized for double-blind review},
          title  = {Title withheld; preprint anonymized},
          note   = {Anonymized self-citation}
-       AND in the body text, replace any "Burnat and [Collaborator] [N]" with
+       AND in the body text, replace any "Smith and Lee [N]" with
                             "Prior work by the authors [N]" or similar.
    ```
 6. **Also scan `.tex` body** near each flagged `\cite{<key>}` for any of the cited entry's surnames within ±200 chars. Flag those occurrences with file:line so the user can de-name the prose alongside the bib fix.

@@ -159,7 +159,7 @@ If the project's vault submission frontmatter or CLAUDE.md indicates a double-bl
 - **P2** no `\thanks{}`, `\acknowledgements`, funding, or grant references in body
 - **P3** body uses third-person self-reference (no "we previously showed", "in our prior work")
 - **P4** **self-citation bib entries are blinded** when the cited paper's authors overlap the submission's — this is the CCS 2026 #1328 desk-reject trigger
-- **P5** body text doesn't name authors of self-cited works (no "Burnat and [Collaborator] [N]")
+- **P5** body text doesn't name authors of self-cited works (no "Smith and Lee [N]")
 - **P6** no identifying URLs (personal websites, GitHub repos with handles)
 - **P7** PDF metadata clean (`pdfinfo` shows no Author / identifying Subject)
 - **P8** figures/screenshots have no identifying watermarks
