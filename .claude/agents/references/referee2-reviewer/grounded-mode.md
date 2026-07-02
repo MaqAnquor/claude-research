@@ -121,7 +121,7 @@ paper: paper-emnlp
 verdict: NEEDS REVISION
 score: 72/100
 open_issues: 8/22
-report: reviews/referee2-reviewer/2026-05-25-1830.md
+report: reviews/paper-emnlp/referee2-reviewer/2026-05-25-1830.md
 notes: mode: grounded; 18/22 grounded; 2 failed-verification findings
 ```
 

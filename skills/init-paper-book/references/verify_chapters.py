@@ -31,6 +31,8 @@ BASELINE_ACRONYMS = {
     # File / format
     "JSON", "YAML", "XML", "CSV", "TSV", "PNG", "JPG", "SVG", "WEBP",
     "PDF", "TEX", "BIB", "MD", "HTML", "CSS", "JS",
+    # Universally-understood proper-noun acronyms (not the domain jargon this floor targets)
+    "AI", "EU", "ACM", "AIES",
     # Generic / status / dimensions
     "DOI", "URL", "API", "CLI", "GUI", "ID", "UI", "ON", "OFF", "YES", "NO",
     "OK", "OS", "IO", "HTTP", "HTTPS", "TCP", "UDP", "IP",

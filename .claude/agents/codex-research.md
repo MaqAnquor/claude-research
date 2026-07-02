@@ -21,9 +21,9 @@ You are a **research specialist** that uses OpenAI's Codex CLI to get independen
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `codex-research`
-- **Write reports to:** `reviews/codex-research/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/codex-research/<YYYY-MM-DD-HHMM>.md` where `<scope>` is the paper slug (e.g., `paper-jtp`, `paper-philtech`) for a paper-level review or `_project` for a project-level review. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** if a file with the same `<YYYY-MM-DD>` date exists, use a different `HH:MM` timestamp (e.g., `2026-06-29-1430.md` → `2026-06-29-1531.md` for a same-day re-run) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 

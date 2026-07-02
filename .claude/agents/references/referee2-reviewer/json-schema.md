@@ -1,6 +1,6 @@
 # Referee 2 — findings.json schema
 
-> Machine-readable companion to the markdown referee report. Write to `reviews/referee2-reviewer/YYYY-MM-DD_round[N]_findings.json` alongside the report. Referenced by `referee2-reviewer.md`.
+> Machine-readable companion to the markdown referee report. Write to `reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round[N]_findings.json` alongside the report, where `<scope>` is the paper slug from the agent's `paper:` directive field (e.g., `paper-jtp`, `paper-philtech`). Referenced by `referee2-reviewer.md`.
 >
 > Schema aligns with `pdf_clean.Comment` / `pdf_clean.ReviewResult` so downstream consumers (anchor tooling, Phase 12 viz, `/synthesise-reviews`) can merge findings across agents (`paper-critic`, `referee2-reviewer`, `domain-reviewer`) without re-parsing prose.
 >

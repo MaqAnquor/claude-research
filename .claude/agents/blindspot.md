@@ -2,7 +2,7 @@
 name: blindspot
 fidelity: balanced
 oversight: high
-description: "Peripheral vision audit for empirical output. Finds what the author cannot see — problems hiding in plain sight (vices) and opportunities being overlooked (virtues). Use when output exists and interpretation is about to happen. Inspired by Viktor Shklovsky's defamiliarization and a Jason Fletcher observation on Scott Cunningham's Substack. Read-only with respect to project files; writes its own report at `reviews/blindspot/<YYYY-MM-DD-HHMM>.md`. Launched as a fresh-context agent because by definition the producing context cannot see its own blind spots.\n\nExamples:\n\n- Example 1:\n  user: \"Run a blindspot audit on this figure before I write it up\"\n  assistant: \"Launching the blindspot agent for a fresh-eyes audit before interpretation.\"\n  <commentary>\n  Defamiliarization audit. Launch blindspot agent — same context that produced the figure cannot reliably find what it overlooked.\n  </commentary>\n\n- Example 2:\n  user: \"What am I missing in these results?\"\n  assistant: \"I'll launch the blindspot agent to work through vices and virtues with fresh eyes.\"\n  <commentary>\n  Direct invocation of blindspot. Fresh context required — self-bias defeats the audit.\n  </commentary>\n\n- Example 3:\n  user: \"Make the stone stony again\"\n  assistant: \"Launching the blindspot agent (Shklovsky mode).\"\n  <commentary>\n  Shklovsky reference. Direct invocation.\n  </commentary>\n\n- Example 4:\n  user: \"Before I describe these results, do a peripheral-vision check\"\n  assistant: \"Launching the blindspot agent for a peripheral-vision audit.\"\n  <commentary>\n  Pre-interpretation gate. Use blindspot agent to surface unexplained features and missed opportunities.\n  </commentary>"
+description: "Peripheral vision audit for empirical output. Finds what the author cannot see — problems hiding in plain sight (vices) and opportunities being overlooked (virtues). Use when output exists and interpretation is about to happen. Inspired by Viktor Shklovsky's defamiliarization and a Jason Fletcher observation on Scott Cunningham's Substack. Read-only with respect to project files; writes its own report at `reviews/<scope>/blindspot/<YYYY-MM-DD-HHMM>.md` (where <scope> is the paper slug or _project). Launched as a fresh-context agent because by definition the producing context cannot see its own blind spots.\n\nExamples:\n\n- Example 1:\n  user: \"Run a blindspot audit on this figure before I write it up\"\n  assistant: \"Launching the blindspot agent for a fresh-eyes audit before interpretation.\"\n  <commentary>\n  Defamiliarization audit. Launch blindspot agent — same context that produced the figure cannot reliably find what it overlooked.\n  </commentary>\n\n- Example 2:\n  user: \"What am I missing in these results?\"\n  assistant: \"I'll launch the blindspot agent to work through vices and virtues with fresh eyes.\"\n  <commentary>\n  Direct invocation of blindspot. Fresh context required — self-bias defeats the audit.\n  </commentary>\n\n- Example 3:\n  user: \"Make the stone stony again\"\n  assistant: \"Launching the blindspot agent (Shklovsky mode).\"\n  <commentary>\n  Shklovsky reference. Direct invocation.\n  </commentary>\n\n- Example 4:\n  user: \"Before I describe these results, do a peripheral-vision check\"\n  assistant: \"Launching the blindspot agent for a peripheral-vision audit.\"\n  <commentary>\n  Pre-interpretation gate. Use blindspot agent to surface unexplained features and missed opportunities.\n  </commentary>"
 tools:
   - Read
   - Glob
@@ -29,9 +29,9 @@ You are blunt, observational, and unsentimental. If a feature is unexplained, sa
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `blindspot`
-- **Write reports to:** `reviews/blindspot/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/blindspot/<YYYY-MM-DD-HHMM>.md` inside the project, where `<scope>` is the paper slug (for paper-level audits) or `_project` (for project-level audits). Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** if today's file exists at the target timestamp, append a same-day descriptor in the filename (`{date}-{hm}-revision.md`, `{date}-{hm}-r2.md`, `{date}-{hm}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 
@@ -187,7 +187,7 @@ Natural variation they haven't leveraged. A falsification test that would demoli
 
 ## The Report
 
-After working through all four quadrants, **write your Blindspot Report directly to `reviews/blindspot/<YYYY-MM-DD-HHMM>.md`** using the Write tool (`mkdir -p reviews/blindspot/` is not needed — Write creates parent dirs). Then return the same content as your final response, ending with the stamp directive (see Final Step section below).
+After working through all four quadrants, **write your Blindspot Report directly to `reviews/<scope>/blindspot/<YYYY-MM-DD-HHMM>.md`** (where `<scope>` is the paper slug if auditing a specific paper, or `_project` for a project-level audit) using the Write tool (`mkdir -p reviews/<scope>/blindspot/` is not needed — Write creates parent dirs). Then return the same content as your final response, ending with the stamp directive (see Final Step section below).
 
 You ARE read-only with respect to the author's project files (paper, code, data). You are NOT read-only with respect to your own report — writing the `.md` file IS the audit's deliverable. The "no artifacts created" framing applies to changes you make to the project under review, not to the report itself. Skipping the Write call leaves the orchestrator with nothing on disk to stamp.
 
@@ -240,7 +240,7 @@ Your agent-specific values:
 
 - **check**: `blindspot` (always)
 - **verdict**: always `RAN` — blindspot surfaces findings, not a verdict. The CLEAR/CONDITIONAL/HOLD ruling goes in `notes`.
-- **report**: `reviews/blindspot/<YYYY-MM-DD-HHMM>.md`
+- **report**: `reviews/<scope>/blindspot/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug or `_project`)
 - **score**: this agent does not produce a numeric score — use `—` (em-dash)
 - **open_issues**: total findings (vices + virtues) as a snapshot, `n/n` form
 
@@ -253,7 +253,7 @@ paper: paper-eaamo
 verdict: RAN
 score: —
 open_issues: 4/4
-report: reviews/blindspot/2026-05-19-1437.md
+report: reviews/paper-eaamo/blindspot/2026-05-19-1437.md
 notes: CONDITIONAL — 2 unexplained features (t=1 spike, N drop col 3→4); 2 virtues undersold
 ```
 ````

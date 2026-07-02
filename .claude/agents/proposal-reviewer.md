@@ -132,7 +132,7 @@ After reading the proposal and completing your notes, spawn **both sub-agents in
 
 ## Phase 3: Report Synthesis
 
-After collecting sub-agent reports, synthesise everything into the final feedback report. Read `references/proposal-reviewer/report-template.md` for the full report structure and filing conventions. Save to `reviews/proposal-reviewer/YYYY-MM-DD_[short_title]_report.md`.
+After collecting sub-agent reports, synthesise everything into the final feedback report. Read `references/proposal-reviewer/report-template.md` for the full report structure and filing conventions. Save to `reviews/<scope>/proposal-reviewer/<YYYY-MM-DD-HHMM>.md`, where `<scope>` is the paper-slug basename if the proposal lives under a `paper-{venue}/` directory, or `_project` for standalone proposals (PhD upgrades, grant outlines, extended abstracts).
 
 ---
 
@@ -225,7 +225,7 @@ Your agent-specific values:
 - **check**: `proposal-reviewer` (always)
 - **verdict**: exactly one of `GREEN`, `READY-WITH-NOTES`, `REVISE`, `REJECT`. GREEN if the proposal is viable as written; READY-WITH-NOTES if viable with minor refinements; REVISE if substantial reshaping is needed before pursuing; REJECT only if the proposed work is fundamentally not worth pursuing.
 - **paper**: the proposal directory basename if the proposal lives inside a `paper-{venue}/` folder, otherwise `—` (em-dash) for standalone proposals (PhD upgrades, grant outlines, extended abstracts not yet under a paper-dir).
-- **report**: `reviews/proposal-reviewer/<YYYY-MM-DD-HHMM>.md` — the canonical timestamp form. Do not use `_report.md` suffixes (forbidden per `rules/review-artefact-routing.md` §R2).
+- **report**: `reviews/<scope>/proposal-reviewer/<YYYY-MM-DD-HHMM>.md` where `<scope>` is the paper slug (if paper-level) or `_project` (if project-level/standalone). Do not use `_report.md` suffixes (forbidden per `rules/review-artefact-routing.md` §R2).
 - **score**: `n/100` form, or `—` if no numeric score produced.
 - **open_issues**: total Major + Minor at run time (snapshot), in `n/n` form.
 - **notes**: one line, ≤120 chars, no pipes, no newlines.
@@ -239,7 +239,7 @@ paper: —
 verdict: REVISE
 score: 62/100
 open_issues: 9/9
-report: reviews/proposal-reviewer/2026-05-23-0923.md
+report: reviews/_project/proposal-reviewer/2026-05-23-0923.md
 notes: Contribution underspecified; novelty overlap with Smith 2024; methods feasibility unclear
 ```
 ````

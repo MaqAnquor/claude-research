@@ -14,9 +14,9 @@ argument-hint: "[path/to/main.tex or no arguments to auto-detect]"
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `pre-submission-report`
-- **Write reports to:** `reviews/pre-submission-report/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<paper-slug>/pre-submission-report/<YYYY-MM-DD-HHMM>.md` inside the project, where `<paper-slug>` is the paper directory name being reviewed (e.g., `paper-jtp` if reviewing `paper-jtp/main.tex`). Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** if the minute-based timestamp file exists, append a same-run descriptor (`{timestamp}-r2.md`, `{timestamp}-revision.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 
@@ -85,8 +85,8 @@ Run these in order — each depends on a clean state from the previous:
 Use when (a) the paper is near submission and you want a comprehensive scan, or (b) the user explicitly asks for the "full pre-submission swarm". Dispatches **7 read-only sub-agents in parallel** via the Task tool, then consolidates findings.
 
 **Hard rules for parallel mode:**
-1. **All sub-agents are read-only with respect to project files under review** — see `subagent-write-guard.md` rule. They do NOT modify the paper, bib, code, or any other artefact under review; the orchestrator (this skill) decides what to fix. **They DO write their own per-agent reports** to `reviews/<source-slug>/<YYYY-MM-DD-HHMM>.md` per each agent's "Log to REVIEW-STATE.md (final step)" instruction — this is the durable record + the INDEX.md stamp that `/review-recap` reads. The "read-only" scope is the artefact under review, NOT a prohibition on writing the review report itself.
-2. **Each sub-agent gets the standard forbid-list** — no git, no latexmk, no edits to files outside their scope. The forbid-list explicitly carves out the `reviews/<source-slug>/` path as a permitted write target (the agent's logging step needs it).
+1. **All sub-agents are read-only with respect to project files under review** — see `subagent-write-guard.md` rule. They do NOT modify the paper, bib, code, or any other artefact under review; the orchestrator (this skill) decides what to fix. **They DO write their own per-agent reports** to `reviews/<paper-slug>/<check>/<YYYY-MM-DD-HHMM>.md` per each agent's "Log to REVIEW-STATE.md (final step)" instruction (where `<paper-slug>` is the paper being reviewed and `<check>` is the agent name, e.g., `paper-critic`, `referee2-reviewer`) — this is the durable record + the INDEX.md stamp that `/review-recap` reads. The "read-only" scope is the artefact under review, NOT a prohibition on writing the review report itself.
+2. **Each sub-agent gets the standard forbid-list** — no git, no latexmk, no edits to files outside their scope. The forbid-list explicitly carves out the `reviews/<paper-slug>/<check>/` path as a permitted write target (the agent's logging step needs it), where `<paper-slug>` is the paper being reviewed (passed in the dispatch) and `<check>` is the agent name.
 3. **Findings consolidate into a P0/P1/P2 fix list** before any edits — single triage point, not 13 streams. Sub-agents return structured findings to the orchestrator in addition to writing their report file; the consolidate step uses the structured returns.
 4. **No edit phase auto-runs** — the user reviews the consolidated report and approves which fixes to apply.
 

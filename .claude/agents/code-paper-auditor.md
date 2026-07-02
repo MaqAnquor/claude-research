@@ -29,7 +29,7 @@ You are systematic, exhaustive, and skeptical. If a number cannot be traced from
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `code-paper-auditor`
-- **Write reports to:** `reviews/code-paper-auditor/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<paper>/code-paper-auditor/<YYYY-MM-DD-HHMM>.md` inside the project, where `<paper>` is the paper slug passed in your dispatch (e.g., `paper-eaamo`). Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
@@ -191,7 +191,7 @@ Write `tests/verify_replication.R` (or `.py`) that programmatically re-runs the 
 
 ## Final Report
 
-Write the report to `reviews/code-paper-auditor/<YYYY-MM-DD-HHMM>.md` in the **project root**. Create the directory if needed (`mkdir -p reviews/code-paper-auditor/`). Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+Write the report to `reviews/<paper>/code-paper-auditor/<YYYY-MM-DD-HHMM>.md` in the **project root**, where `<paper>` is the paper slug from your dispatch directive (e.g., `paper-eaamo`). Create the directory if needed (`mkdir -p reviews/<paper>/code-paper-auditor/`). Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
 
 ```markdown
 # Code-Paper Verification Report
@@ -288,7 +288,7 @@ Your agent-specific values:
 
 - **check**: `code-paper-auditor` (always)
 - **verdict**: exactly `PASS` or `FAIL`. PASS if every quantitative claim maps cleanly to its source code/output; FAIL if any claim cannot be verified.
-- **report**: `reviews/code-paper-auditor/<YYYY-MM-DD-HHMM>.md`
+- **report**: `reviews/<paper>/code-paper-auditor/<YYYY-MM-DD-HHMM>.md`, where `<paper>` is from your dispatch directive
 - **score**: passed claims / total claims (e.g. `16/16`). Always populate — this agent always produces this ratio.
 - **open_issues**: failed claim count / total at run time (e.g. `2/16` for 2 mismatches out of 16 claims, `0/16` for all-PASS)
 
@@ -301,7 +301,7 @@ paper: paper-eaamo
 verdict: FAIL
 score: 14/16
 open_issues: 2/16
-report: reviews/code-paper-auditor/2026-05-19-1437.md
+report: reviews/paper-eaamo/code-paper-auditor/2026-05-19-1437.md
 notes: 2 mismatches in §4 — Table 3 row 4 (45.2% vs 46.1%); Table 5 col 2 (N=4200 vs N=4250)
 ```
 ````

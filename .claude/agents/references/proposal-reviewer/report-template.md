@@ -7,10 +7,10 @@ After collecting sub-agent reports, synthesise everything into the final feedbac
 Save the report to:
 
 ```
-reviews/proposal-reviewer/YYYY-MM-DD_[short_title]_report.md
+reviews/_project/proposal-reviewer/YYYY-MM-DD-HHMM.md
 ```
 
-Create the `reviews/proposal-reviewer/` directory if it does not exist. Do NOT overwrite previous reports — each review is dated.
+Create the `reviews/_project/proposal-reviewer/` directory if it does not exist. Do NOT overwrite previous reports — each review is dated.
 
 ## Report Structure
 

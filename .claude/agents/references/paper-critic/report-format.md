@@ -2,7 +2,7 @@
 
 > Full markdown template for the `CRITIC-REPORT.md` artefact. Referenced by `paper-critic.md`.
 >
-> Write the report to `reviews/paper-critic/YYYY-MM-DD_CRITIC-REPORT.md` in the **project root** (the directory containing the `.tex` files, NOT the Task Management directory). Create `reviews/paper-critic/` if it does not exist. Do NOT overwrite previous reports — each review is dated. **Write this AFTER `findings.json` is finalised** (see `json-schema.md`).
+> Write the report to `reviews/<paper>/paper-critic/YYYY-MM-DD-HHMM.md` in the **project root** (the directory containing the `.tex` files, NOT the Task Management directory), where `<paper>` is the paper slug (e.g., `paper-jtp`, `paper-philtech`) passed in your dispatch prompt. Create `reviews/<paper>/paper-critic/` if it does not exist. Do NOT overwrite previous reports — each review is dated. The optional sidecar `YYYY-MM-DD-HHMM.findings.json` lives in the same `reviews/<paper>/paper-critic/` directory. **Write this AFTER `findings.json` is finalised** (see `json-schema.md`).
 
 ## Template
 

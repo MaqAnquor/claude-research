@@ -16,9 +16,9 @@ The core insight: a single-perspective analysis inherits the biases of that pers
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `multi-perspective`
-- **Write reports to:** `reviews/multi-perspective/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/multi-perspective/YYYY-MM-DD-HHMM.md` inside the project, where `<scope>` is the paper slug (e.g., `paper-jtp`, `paper-philtech`) for paper-level reviews or `_project` for project-level reviews. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** the timestamp includes minutes (`YYYY-MM-DD-HHMM`), so same-day runs are naturally separated. If multiple reports are generated in the same minute, append a descriptor (`{timestamp}-r2.md`, `{timestamp}-revision.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 
@@ -217,7 +217,7 @@ Based on the synthesis:
 
 ### Phase 5: Output
 
-Create `correspondence/internal-reviews/` if it does not exist (`mkdir -p`). Write the report to `correspondence/internal-reviews/PERSPECTIVES-REPORT.md` (or print to console for quick use).
+Create `reviews/<scope>/multi-perspective/` if it does not exist (`mkdir -p`), where `<scope>` is the paper slug or `_project` as applicable. Write the report to `reviews/<scope>/multi-perspective/YYYY-MM-DD-HHMM.md` (or print to console for quick use).
 
 ## Output Format
 

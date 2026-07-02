@@ -46,16 +46,49 @@ If `mystmd` is missing, the script exits with a one-line error and the overall i
 
 The init pipeline never blocks on PDF errors. Atlas HTML rendering is canonical; the PDF is a derived artifact.
 
-## Publication info on the title page
+## Frontispiece title page
 
-The custom title page reads from two sources:
+The script replaces the book-class `\maketitle` with a **frontispiece** that mirrors
+the web cover at `books.user.com/<slug>`: a "Reading Companion" eyebrow, the book
+title (with any trailing "— A Reading Companion" suffix stripped so it doesn't echo
+the eyebrow), a "Companion to <paper>" line, the author, the
+venue · status · institution row, and publication IDs (DOI / arXiv / Code) at the
+foot. Always applied — even with no publication metadata the eyebrow + title +
+author + date beats the bare default.
+
+Metadata reads from two sources:
 
 | Source | Fields |
 |--------|--------|
-| Atlas topic (`~/Research-Vault/atlas/<theme>/<slug>.md`) | `paper_title`, `venue`, `status` from `outputs[0]` |
+| Atlas topic (`~/Research-Vault/atlas/<theme>/<slug>.md`) | `paper_title`, `venue`, `status` from `outputs[0]`; `institution` from the top level |
 | `<book>/myst.yml` | `subtitle`, `conference_date`, `doi`, `arxiv`, `repo`, `license` (overrides win) |
 
 The atlas topic is the canonical record. Per-book overrides in `myst.yml` fill fields atlas doesn't carry (conference dates, repo URLs, license).
+
+## Standard math macros
+
+The preamble patch injects a default set of research-notation macros via
+`\providecommand`, mirroring the source papers' preambles and the web book's
+MathJax macro set (atlas `prose-assets.html`):
+
+| Macro | Expansion |
+|-------|-----------|
+| `\Prob` | `\mathbb{P}` |
+| `\E` | `\mathbb{E}` |
+| `\Var` | `\operatorname{Var}` |
+| `\1` | `\mathds{1}` — double-stroke indicator 𝟙 (via `dsfont`) |
+
+Each is `\ensuremath`-wrapped so it also survives in text mode (mystmd can
+emit these outside `$...$`, like the arrow glyphs). The preamble loads
+`dsfont` for `\mathds`; the web book uses `\mathbb{1}` for the same glyph
+(MathJax's double-struck digit).
+
+Because it's `\providecommand`, a book that defines the same macro itself —
+either in its chapter source or via a `math:` block in `<book>/myst.yml`
+(mystmd expands those inline before this preamble runs) — always wins; the
+injected defaults are just a net so common shorthand resolves without
+per-book config. Add more here (and in `prose-assets.html` for the web) as
+conventions recur.
 
 ## When to skip
 

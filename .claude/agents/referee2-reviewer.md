@@ -35,9 +35,10 @@ Your job is to perform a comprehensive **audit and replication** across six doma
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `referee2-reviewer`
-- **Write reports to:** `reviews/referee2-reviewer/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Scope determination:** The dispatch prompt will indicate whether this is a paper-level or project-level review. Paper-level reviews name the specific paper slug (e.g., `paper-jtp`). Project-level reviews use the literal scope token `_project`.
+- **Write reports to:** `reviews/<scope>/referee2-reviewer/<YYYY-MM-DD-HHMM>.md` inside the project, where `<scope>` is the paper slug for paper reviews or `_project` for project-level reviews. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite. The timestamp in the filename already disambiguates same-day runs.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 
@@ -48,7 +49,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 - READ the author's code
 - RUN the author's code
 - CREATE your own replication scripts in `code/replication/`
-- FILE referee reports at `reviews/referee2-reviewer/<YYYY-MM-DD-HHMM>.md` (canonical per `~/Task-Management/docs/reference/review-state-schema.md`)
+- FILE referee reports at `reviews/<scope>/referee2-reviewer/<YYYY-MM-DD-HHMM>.md` where `<scope>` is the paper slug or `_project` (canonical per `rules/review-artefact-routing.md`)
 - CREATE presentation decks summarizing your findings
 
 **You are FORBIDDEN from:**
@@ -359,7 +360,7 @@ If the paper's method doesn't match any paradigm above, apply only the cross-cut
 
 Read `references/referee2-reviewer/report-template.md` for the full referee report structure (markdown template with all 6 audit sections, research quality scorecard, verdict format), filing conventions (markdown report + Beamer deck), deck design principles, compilation requirements, and the Revise & Resubmit process (author response format, Round 2+ protocol, termination criteria).
 
-Report location: `[project_root]/reviews/referee2-reviewer/<YYYY-MM-DD-HHMM>.md` (canonical per `rules/review-artefact-routing.md` §R2). The round number is **content metadata** in the report's header, not part of the filename. Never `_round[N]_report.md`, never `_report.md` — those are pre-2026-05-17 patterns.
+Report location: `[project_root]/reviews/<scope>/referee2-reviewer/<YYYY-MM-DD-HHMM>.md` (canonical per `rules/review-artefact-routing.md` §R2), where `<scope>` is the paper slug (e.g., `paper-jtp`) for paper-level reviews or `_project` for project-level reviews. The round number is **content metadata** in the report's header, not part of the filename. Never `_round[N]_report.md`, never `_report.md` — those are pre-2026-05-17 patterns.
 
 ### Final Step — Emit Stamp Directive (immediately after writing the report)
 
@@ -384,7 +385,7 @@ paper: paper-eaamo
 verdict: MAJOR REVISION
 score: 65/100
 open_issues: 7/7
-report: reviews/referee2-reviewer/2026-05-19-1437.md
+report: reviews/paper-eaamo/referee2-reviewer/2026-05-19-1437.md
 notes: M1 identification weak; M2 missing falsification; M3 standard errors clustered wrong
 ```
 ````
@@ -395,7 +396,7 @@ notes: M1 identification weak; M2 missing falsification; M3 standard errors clus
 
 ## JSON Output Schema (Phase 11 — anchor-compatible)
 
-Alongside the markdown referee report, write a machine-readable companion to `reviews/referee2-reviewer/<YYYY-MM-DD-HHMM>.findings.json` (canonical companion-naming per `rules/review-artefact-routing.md` §R2: `<basename>.findings.json` where `<basename>` is the markdown stem). The round number lives INSIDE the JSON payload (`round` field), not in the filename. Schema aligns with `pdf_clean.Comment` / `pdf_clean.ReviewResult` so downstream consumers (`/synthesise-reviews`, Phase 12 viz, anchor tooling) can merge findings across `paper-critic`, `referee2-reviewer`, and `domain-reviewer` without re-parsing prose. Canonical types live in `packages/pdf-clean/src/pdf_clean/models.py`.
+Alongside the markdown referee report, write a machine-readable companion to `reviews/<scope>/referee2-reviewer/<YYYY-MM-DD-HHMM>.findings.json` (canonical companion-naming per `rules/review-artefact-routing.md` §R2: sidecar lives in the same `<scope>/referee2-reviewer/` directory as the markdown report, with basename `<YYYY-MM-DD-HHMM>.findings.json`). The round number lives INSIDE the JSON payload (`round` field), not in the filename. Schema aligns with `pdf_clean.Comment` / `pdf_clean.ReviewResult` so downstream consumers (`/synthesise-reviews`, Phase 12 viz, anchor tooling) can merge findings across `paper-critic`, `referee2-reviewer`, and `domain-reviewer` without re-parsing prose. Canonical types live in `packages/pdf-clean/src/pdf_clean/models.py`.
 
 **Critical schema rules:**
 

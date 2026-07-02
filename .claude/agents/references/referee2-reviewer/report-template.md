@@ -174,13 +174,17 @@ After completing your audit and replication, you produce **two deliverables**:
 
 ### 1. The Referee Report (Markdown)
 
-**Location:** `[project_root]/reviews/referee2-reviewer/YYYY-MM-DD_round[N]_report.md`
+**Location:** `[project_root]/reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round[N]_report.md`
+
+Where `<scope>` is the paper slug (e.g., `paper-jtp`, `paper-philtech`) from the dispatch directive's `paper:` field, or `_project` for project-level reviews.
 
 The detailed written report with all findings, comparison tables, and recommendations.
 
 ### 2. The Referee Report Deck (Beamer/PDF)
 
-**Location:** `[project_root]/reviews/referee2-reviewer/YYYY-MM-DD_round[N]_deck.tex` (and compiled `.pdf`)
+**Location:** `[project_root]/reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round[N]_deck.tex` (and compiled `.pdf`)
+
+Where `<scope>` is the paper slug or `_project` (same as the report).
 
 A presentation deck that **visualizes** the audit findings. The markdown report provides the detailed written record; the deck helps the author **understand** the problems through tables and figures.
 
@@ -257,9 +261,9 @@ Before filing the deck:
 
 #### Files Produced
 
-- `reviews/referee2-reviewer/YYYY-MM-DD_round1_report.md` — Detailed written report
-- `reviews/referee2-reviewer/YYYY-MM-DD_round1_deck.tex` — LaTeX source
-- `reviews/referee2-reviewer/YYYY-MM-DD_round1_deck.pdf` — Compiled presentation
+- `reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round1_report.md` — Detailed written report
+- `reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round1_deck.tex` — LaTeX source
+- `reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round1_deck.pdf` — Compiled presentation
 
 The markdown and deck go hand-in-hand: the markdown is the permanent written record; the deck is how the author reviews and understands the audit findings.
 
@@ -284,7 +288,7 @@ The author reads the referee report and must:
 2. **For each Minor Concern**: Either FIX it or ACKNOWLEDGE and explain deprioritization
 3. **Answer all Questions for Authors**
 4. **Describe code changes made** (what files, what changes)
-5. **File response** at: `reviews/referee2-reviewer/YYYY-MM-DD_round1_response.md`
+5. **File response** at: `reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round1_response.md`
 
 **Response format:**
 ```
@@ -330,8 +334,8 @@ The author reads the referee report and must:
 ### Round 2+: Revision Review
 
 1. The Referee 2 agent is launched again with instructions to read:
-   - The original referee report (`round1_report.md`)
-   - The author response (`round1_response.md`)
+   - The original referee report (`reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round1_report.md`)
+   - The author response (`reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round1_response.md`)
    - The revised code
 2. Referee 2 re-runs all five audits
 3. Referee 2 assesses whether concerns were adequately addressed:
@@ -339,7 +343,7 @@ The author reads the referee report and must:
    - **Justified**: Accept justification OR push back if unconvincing
    - **Ignored**: Flag and escalate
    - **New issues introduced**: Add to concerns
-4. Referee 2 files Round 2 report at `reviews/referee2-reviewer/YYYY-MM-DD_round2_report.md`
+4. Referee 2 files Round 2 report at `reviews/<scope>/referee2-reviewer/YYYY-MM-DD_round2_report.md`
 
 ### Termination
 

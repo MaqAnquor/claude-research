@@ -14,7 +14,7 @@ argument-hint: "[project-path or tex-file] [--verify-doi] [--fix]"
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `bib-validate`
-- **Write reports to:** `reviews/bib-validate/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<paper-slug>/bib-validate/<YYYY-MM-DD-HHMM>.md` inside the project (where `<paper-slug>` is the paper directory slug, e.g., `paper-jtp`, `paper-philtech`). Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
@@ -118,30 +118,28 @@ Also handle **multi-key citations**: `\citep{key1, key2, key3}`
 
 ## Cross-Reference Checks
 
-### Critical: Self-citation deanonymization (double-blind submissions only)
+### Self-citation handling (double-blind submissions only)
 
-When `--double-blind` is set OR when a `paper-*` directory's vault submission frontmatter shows the venue is double-blind, run a self-citation scan in addition to the standard checks.
+When `--double-blind` is set OR when a `paper-*` directory's vault submission frontmatter shows the venue is double-blind, run a self-citation scan. **Default expectation: the author CAN and SHOULD cite their own prior work — keep the real bib entry and cite it in the third person.** Anonymity comes from removing the author block, not from blinding the bibliography; a `{Anonymous}` entry actually *advertises* the self-citation. See `rules/double-blind-self-citation.md` and `_shared/double-blind-anonymity-checklist.md` §P4–P5.
 
-1. **Load submission author list.** Read `~/Research-Vault/submissions/<paper-slug>-<venue>-<year>.md` `authors:` / `coauthors:` field. If absent, prompt: `Submission author surnames (comma-separated):`. Refuse to proceed without a non-empty list.
-2. **For each `.bib` entry, parse the `author = {...}` field.** Tokenize by `and` and extract surnames.
-3. **Compare against the submission author list.** If the cited entry's author surnames are a *subset* of the submission's (or the cited entry has authors that exactly match), flag the citation.
-4. **Severity: Critical.** Self-citation by name is a desk-reject trigger at every major double-blind security/ML venue (CCS, NDSS, S&P, USENIX, ICML, NeurIPS, ICLR). Third-person grammar in the body text alone does NOT cure the issue when the bib entry itself names the authors — see `_shared/double-blind-anonymity-checklist.md` §P4.
-5. **Output format:**
+1. **Load submission author list.** Read `~/Research-Vault/submissions/<paper-slug>-<venue>-<year>.md` `authors:` / `coauthors:` field. If absent, prompt: `Submission author surnames (comma-separated):`.
+2. **Identify self-citations.** For each `.bib` entry, parse `author = {...}`, tokenize by `and`, extract surnames; mark entries whose authors overlap the submission's as *self-citations* — these are expected, not violations.
+3. **Scan the `.tex` body near each self-cite `\cite{<key>}` (±200 chars) for FIRST-PERSON voice** — "our"/"we previously"/"in earlier work of ours". That first-person voice is the actual de-anonymizer, not the names.
+4. **Severity:**
+   - **Info / no action** — self-citation cited in the third person with the real entry kept. This is the correct finished state. Naming the authors ("Burnat and [Collaborator] [2] show X") in the third person is fine.
+   - **Critical** — first-person voice near a self-cite → rewrite to third person (the citation and the real entry stay).
+   - **Critical (CFP-conditional)** — *only* if the venue's CFP explicitly requires anonymizing self-citations (some security venues, e.g. CCS) → then also blind the entry. Do **not** blind by default.
+5. **Output format (first-person-voice case):**
    ```
-   ⚠ SELF-CITATION DEANONYMIZATION (Critical)
-     references.bib:42  smith2026paradox
-       authors:    Alex P Smith and Jordan K Lee
-       overlaps:   Smith (1/1), Lee (1/1) → ALL submission authors named
-       remediation:
-         author = {Anonymized for double-blind review},
-         title  = {Title withheld; preprint anonymized},
-         note   = {Anonymized self-citation}
-       AND in the body text, replace any "Smith and Lee [N]" with
-                            "Prior work by the authors [N]" or similar.
+   ⚠ FIRST-PERSON SELF-REFERENCE (Critical)
+     intro.tex:88  near \cite{smith2026paradox}
+       "in our prior work [12] we showed..."
+       fix: third person — "Prior work [12] showed..."  (citation + real entry stay)
    ```
-6. **Also scan `.tex` body** near each flagged `\cite{<key>}` for any of the cited entry's surnames within ±200 chars. Flag those occurrences with file:line so the user can de-name the prose alongside the bib fix.
+   For the CFP-mandated-blinding exception only, additionally anonymize the entry:
+   `author = {Anonymized for double-blind review}`, `title = {Title withheld}`, `note = {Anonymized self-citation}`.
 
-This check is a desk-reject prevention gate (see incident log in `_shared/double-blind-anonymity-checklist.md`). Run it before the standard cross-reference checks so the user sees the most-severe finding first.
+This is a **venue-conditional** check, not an unconditional desk-reject gate. Run it with the standard cross-reference checks.
 
 ### Critical: Missing Entries
 
@@ -267,7 +265,7 @@ Compute the score and include the Score Block in the report after the summary ta
 
 ## Log to REVIEW-STATE.md (final step)
 
-Write the bib-validate report to `reviews/bib-validate/<YYYY-MM-DD-HHMM>.md` (`mkdir -p reviews/bib-validate/` first). Then append a row to the project's `REVIEW-STATE.md`:
+Write the bib-validate report to `reviews/<paper-slug>/bib-validate/<YYYY-MM-DD-HHMM>.md` (where `<paper-slug>` is the paper directory slug, e.g., `paper-jtp`, `paper-philtech`; create `mkdir -p reviews/<paper-slug>/bib-validate/` first). Then append a row to the project's `REVIEW-STATE.md`:
 
 ```bash
 bash ~/.claude/skills/_shared/review-state-log.sh \
@@ -276,7 +274,7 @@ bash ~/.claude/skills/_shared/review-state-log.sh \
   --verdict "<PASS|ISSUES FOUND>" \
   --score "<numeric score from quality-scoring framework, or —>" \
   --open-issues "<missing-plus-unused-plus-typo-count>/<missing-plus-unused-plus-typo-count>" \
-  --report "reviews/bib-validate/<YYYY-MM-DD-HHMM>.md" \
+  --report "reviews/<paper-slug>/bib-validate/<YYYY-MM-DD-HHMM>.md" \
   --notes "<one-line: e.g. '2 missing keys, 5 unused; 1 likely fabricated'>" \
   [--trigger "pre-submission-report|review-cluster"]
 ```

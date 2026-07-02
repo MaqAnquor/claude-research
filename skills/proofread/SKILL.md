@@ -7,14 +7,14 @@ argument-hint: [project-path or tex-file]
 
 # Academic Proofreading
 
-**Report-only skill.** Never edit source files — produce `reviews/proofread/<YYYY-MM-DD-HHMM>.md` only.
+**Report-only skill.** Never edit source files — produce `reviews/<scope>/proofread/<YYYY-MM-DD-HHMM>.md` only (where `<scope>` is the paper slug, e.g. `paper-jtp`).
 
 ## Output Path
 
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `proofread`
-- **Write reports to:** `reviews/proofread/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/proofread/YYYY-MM-DD.md` inside the project, where `<scope>` is the paper slug (e.g., `paper-jtp`). Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
@@ -39,7 +39,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 1. **Locate files**: Find all `.tex` files in the project (and `.log` files for LaTeX diagnostics)
 2. **Read the document**: Read all `.tex` source files in order
 3. **Run 11 check categories** (below)
-4. **Produce report**: Write `reviews/proofread/<YYYY-MM-DD-HHMM>.md` under the project directory (create the directory if it does not exist: `mkdir -p reviews/proofread/`). Do NOT overwrite previous reports — each review is timestamped to the minute. Canonical convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+4. **Produce report**: Write `reviews/<scope>/proofread/<YYYY-MM-DD-HHMM>.md` under the project directory (where `<scope>` is the paper slug, e.g., `paper-jtp`; create the directory if it does not exist: `mkdir -p reviews/<scope>/proofread/`). Do NOT overwrite previous reports — each review is timestamped to the minute. Canonical convention: `~/Task-Management/docs/reference/review-state-schema.md`.
 
 ## Check Categories
 
@@ -158,8 +158,8 @@ If the project's vault submission frontmatter or CLAUDE.md indicates a double-bl
 - **P1** title page anonymized (no `\author{}` with real names)
 - **P2** no `\thanks{}`, `\acknowledgements`, funding, or grant references in body
 - **P3** body uses third-person self-reference (no "we previously showed", "in our prior work")
-- **P4** **self-citation bib entries are blinded** when the cited paper's authors overlap the submission's — this is the CCS 2026 #1328 desk-reject trigger
-- **P5** body text doesn't name authors of self-cited works (no "Smith and Lee [N]")
+- **P4** self-citations are cited in the third person with the **real bib entry kept** — do *not* flag a named self-cite entry as a violation; naming the authors in a third-person citation is correct (anonymity comes from the author block, not the bibliography). Blind the entry only if the venue's CFP explicitly requires it (rare; some security venues). See `rules/double-blind-self-citation.md`.
+- **P5** self-references use third-person *voice*: flag first-person ("we previously showed", "in our prior work [N]") near a self-cite — **not** the author names themselves ("Burnat and [Collaborator] [N] show X" is fine)
 - **P6** no identifying URLs (personal websites, GitHub repos with handles)
 - **P7** PDF metadata clean (`pdfinfo` shows no Author / identifying Subject)
 - **P8** figures/screenshots have no identifying watermarks
@@ -301,7 +301,7 @@ bash ~/.claude/skills/_shared/review-state-log.sh \
   --paper "<paper-{venue} dir>" \
   --verdict "<PASS|ISSUES FOUND>" \
   --open-issues "<total-issues-across-categories>/<total-issues-across-categories>" \
-  --report "reviews/proofread/<YYYY-MM-DD-HHMM>.md" \
+  --report "reviews/<scope>/proofread/<YYYY-MM-DD-HHMM>.md" \
   --notes "<one-line: e.g. '3 critical, 12 minor; mostly notation §3'>" \
   [--trigger "pre-submission-report|review-cluster"]
 ```

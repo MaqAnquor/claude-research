@@ -14,9 +14,9 @@ argument-hint: "[project-path or tex-file] [--mode design|audit]"
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `causal-design`
-- **Write reports to:** `reviews/causal-design/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/causal-design/<YYYY-MM-DD-HHMM>.md` inside the project, where `<scope>` is the paper slug (e.g. `paper-philtech`) for paper-level audits or `_project` for project-level reviews. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** if today's timestamp exists, append a same-day descriptor to the path base (`{date}-HHMM-revision.md`, `{date}-HHMM-r2.md`, `{date}-HHMM-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 
@@ -104,7 +104,7 @@ Launch the domain-reviewer agent with this prompt:
 "You are reviewing a causal identification strategy memo. [Insert contents of causal-audit-prompt.md, customised with the specific strategy chosen]. The memo is at [path]. Focus exclusively on identification credibility."
 ```
 
-The agent will produce a `DOMAIN-REVIEW.md` in the project's `reviews/domain-reviewer/` directory.
+The agent will produce a report at `reviews/<scope>/domain-reviewer/<YYYY-MM-DD-HHMM>.md` in the project, where `<scope>` is the paper slug or `_project`.
 
 ### Phase 5: Iterate
 
@@ -190,7 +190,7 @@ If estimation code exists, verify it implements the claimed design:
 
 ### Audit Report
 
-Produce an audit report at `reviews/causal-audit/YYYY-MM-DD_CAUSAL-AUDIT.md` with:
+Produce an audit report at `reviews/<scope>/causal-design/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug or `_project`) with:
 
 ```markdown
 # Causal Audit Report

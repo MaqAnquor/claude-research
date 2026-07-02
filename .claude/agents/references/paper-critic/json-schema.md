@@ -1,6 +1,6 @@
 # Paper Critic — findings.json schema
 
-> Machine-readable companion to `CRITIC-REPORT.md`. Write to `reviews/paper-critic/YYYY-MM-DD_findings.json` alongside the markdown report. Referenced by `paper-critic.md`.
+> Machine-readable companion to `CRITIC-REPORT.md`. Write to `reviews/<paper_slug>/paper-critic/YYYY-MM-DD-HHMM.findings.json` alongside the markdown report. Referenced by `paper-critic.md`.
 >
 > **Canonical types live in `packages/pdf-clean/src/pdf_clean/models.py`.** Do not invent a parallel schema — extend the `Comment` dataclass with the project-specific fields below.
 

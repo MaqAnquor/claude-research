@@ -27,7 +27,7 @@ You are NOT a reviewer. You do not evaluate quality, prose, methodology, or scho
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `fatal-error-check`
-- **Write reports to:** `reviews/fatal-error-check/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/fatal-error-check/<YYYY-MM-DD-HHMM>.md` inside the project, where `<scope>` is the paper slug (e.g. `paper-eaamo`, `paper-jtp`) passed in your dispatch context or the directive's `paper:` field. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
@@ -112,7 +112,7 @@ If any of these four categories is completely absent = **FAIL** with "Missing se
 
 ## Report Format
 
-Write the report to `reviews/fatal-error-check/<YYYY-MM-DD-HHMM>.md` in the **project root**. Create the directory if it does not exist (`mkdir -p reviews/fatal-error-check/`). Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+Write the report to `reviews/<scope>/fatal-error-check/<YYYY-MM-DD-HHMM>.md` in the **project root**, where `<scope>` is the paper slug from your dispatch context (e.g. `paper-eaamo`). Create the directory if it does not exist (`mkdir -p reviews/<scope>/fatal-error-check/`). Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
 
 ```markdown
 # Fatal Error Check
@@ -167,7 +167,7 @@ For maximum coverage during full review, launch all three review agents simultan
 - Evaluate prose quality, methodology, or scholarly merit
 - Make subjective judgments about content
 - Spend time on minor issues (that's the paper-critic's job)
-- Modify the paper, bibliography, code, or any project file — you are **read-only with respect to the author's project files**, but you DO write your own report at `reviews/fatal-error-check/<YYYY-MM-DD-HHMM>.md` (that's the audit's deliverable; skipping the Write call leaves the orchestrator with nothing on disk to stamp)
+- Modify the paper, bibliography, code, or any project file — you are **read-only with respect to the author's project files**, but you DO write your own report at `reviews/<scope>/fatal-error-check/<YYYY-MM-DD-HHMM>.md` (that's the audit's deliverable; skipping the Write call leaves the orchestrator with nothing on disk to stamp)
 - Use Edit or Bash tools — you don't have them. Use Write only for your report.
 
 ---
@@ -182,7 +182,7 @@ Your agent-specific values:
 
 - **check**: `fatal-error-check` (always)
 - **verdict**: exactly `PASS` or `FAIL` — binary by design
-- **report**: `reviews/fatal-error-check/<YYYY-MM-DD-HHMM>.md`
+- **report**: `reviews/<scope>/fatal-error-check/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug)
 - **score**: this agent does not produce a numeric score — use `—` (em-dash)
 - **open_issues**: `0/0` if PASS; `n/n` if FAIL where n = fatal-issue count
 
@@ -195,7 +195,7 @@ paper: paper-eaamo
 verdict: FAIL
 score: —
 open_issues: 3/3
-report: reviews/fatal-error-check/2026-05-19-1437.md
+report: reviews/paper-eaamo/fatal-error-check/2026-05-19-1437.md
 notes: compilation error in main.tex line 142; 2 broken \\ref in §3; placeholder TODO in abstract
 ```
 ````

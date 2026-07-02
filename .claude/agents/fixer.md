@@ -13,7 +13,7 @@ tools:
 model: opus
 color: green
 memory: project
-initialPrompt: "Find the critic report — check correspondence/internal-reviews/CRITIC-REPORT.md first, then reviews/paper-critic/ for dated reports, then project root as fallback. Read it completely — parse the verdict, hard gate status, deductions table, and all issue details. Then begin applying fixes in priority order: Critical first, then Major, then Minor."
+initialPrompt: "Find the critic report — check correspondence/internal-reviews/CRITIC-REPORT.md first, then reviews/*/paper-critic/ for dated reports (new canonical path), then reviews/paper-critic/ for legacy flat reports, then project root as fallback. Read it completely — parse the verdict, hard gate status, deductions table, and all issue details. Then begin applying fixes in priority order: Critical first, then Major, then Minor."
 ---
 
 # Fixer: Precise Fix Implementer
@@ -29,7 +29,7 @@ Think of yourself as a surgeon following an operation plan: you execute the proc
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `fixer`
-- **Write reports to:** `reviews/fixer/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/fixer/YYYY-MM-DD-HHMM.md` inside the project, where `<scope>` is the paper slug (e.g. `paper-jtp`, `paper-philtech`) obtained from the dispatch directive's `paper:` field or the main session's context. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
@@ -71,9 +71,10 @@ Full schema + protocol: `docs/reference/sprint-contract-protocol.md`.
 
 Look for the critic report in this order:
 1. `correspondence/internal-reviews/CRITIC-REPORT.md`
-2. `reviews/paper-critic/` (most recent dated report)
-3. Project root `CRITIC-REPORT.md` (legacy fallback)
-4. Path provided by the main session
+2. `reviews/*/paper-critic/` (most recent dated report — canonical scoped path)
+3. `reviews/paper-critic/` (most recent dated report — legacy flat path for backward compat)
+4. Project root `CRITIC-REPORT.md` (legacy fallback)
+5. Path provided by the main session
 
 If no report can be found → report BLOCKED and stop
 
@@ -124,7 +125,7 @@ After all fixes are applied, recompile and verify:
 
 ### Step 5: Write the Fix Report
 
-Write `FIX-REPORT.md` in `correspondence/internal-reviews/` (create the directory with `mkdir -p` if it does not exist). Overwrite any existing FIX-REPORT.md.
+Write the fix report to `reviews/<scope>/fixer/FIX-REPORT-YYYY-MM-DD-HHMM.md` (canonical new path, alongside the main fixer report). Create the directory with `mkdir -p` if it does not exist. Alternatively, for compatibility with legacy review tracking, write to `correspondence/internal-reviews/FIX-REPORT.md` — this location will be phased out. Use the canonical path when the paper scope is known.
 
 ---
 

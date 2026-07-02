@@ -118,7 +118,7 @@ If the directory doesn't exist, create it and proceed.
 
 ### Common Core + Conditional Structure
 
-**Common core** (always created): `CLAUDE.md`, `README.md`, `MEMORY.md`, `.gitignore`, `.context/`, `.claude/`, `docs/` (literature-review, readings, venues), `log/`, `paper-{venue}/` (with symlink + `correspondence/referee-reviews/`), `github-repo/` (optional), `knowledge/`, `reviews/INDEX.md` (manifest only — per-source subdirs created lazily, per `rules/review-artefact-routing.md`), `correspondence/editorial/`, `correspondence/referee-reviews/`, `to-sort/`.
+**Common core** (always created): `CLAUDE.md`, `README.md`, `MEMORY.md`, `.gitignore`, `.context/`, `.claude/`, `docs/` (literature-review, readings, venues), `log/`, `paper-{venue}/` (with symlink + `correspondence/referee-reviews/`), `github-repo/` (optional), `knowledge/`, `reviews/INDEX.md` (manifest only — per-scope/per-check subdirs created lazily, per `rules/review-artefact-routing.md`), `correspondence/editorial/`, `correspondence/referee-reviews/`, `to-sort/`.
 
 > **Note:** the legacy `REVIEW-STATE.md` at project root + `reviews/` empty dir + `correspondence/internal-reviews/` layout is superseded by `rules/review-artefact-routing.md`. New projects scaffold the new layout directly; existing projects retrofit via `/tidy-project-reviews`. Per-paper `backup/` directories are created lazily by the LaTeX-compile PostToolUse hook and are gitignored via `paper-*/backup/`.
 
@@ -158,7 +158,7 @@ Full templates: [`templates/seed-files.md`](templates/seed-files.md).
 | `README.md` | Human overview: title, authors, abstract, links, status |
 | `.gitignore` | Standard ignores: OS, IDE, data, paper, Python, R, LaTeX |
 | `MEMORY.md` | Knowledge base: notation, estimands, decisions, pitfalls |
-| `reviews/INDEX.md` | Review-artefact manifest. Header only at scaffold; populated by review-producing skills/agents writing to `reviews/<source>/YYYY-MM-DD.md`. Maintained by `/review-recap`. See `rules/review-artefact-routing.md`. **Supersedes the legacy `REVIEW-STATE.md` at project root.** |
+| `reviews/INDEX.md` | Review-artefact manifest. Header only at scaffold; populated by review-producing skills/agents writing to `reviews/<scope>/<check>/<YYYY-MM-DD-HHMM>.md` where `<scope>` is the paper name (e.g. `paper-jtp`) or `_project` for project-level reviews, and `<check>` is the producer slug (e.g. `paper-critic`, `proofread`). Maintained by `/review-recap`. See `rules/review-artefact-routing.md`. **Supersedes the legacy `REVIEW-STATE.md` at project root.** |
 | `.context/current-focus.md` | Initial "just initialised" state |
 | `.context/field-calibration.md` | Per-project domain profile placeholder (`/interview-me` populates) |
 | `.context/project-recap.md` | Research design notes |
@@ -192,8 +192,13 @@ Full nested structure, theme-prefix table, symlink commands, backup loop: [`refe
 Skip entirely if the user chose "No git" in Round 2.
 
 ```bash
-cd "<project-path>" && git init && git branch -m main && git add . && git commit -m "Initialize project: <working-title>"
+cd "<project-path>" && git init && git branch -m main
+# Activate the shared Paperpile citation pre-commit hook (per rules/paperpile-citations.md):
+git config core.hooksPath "$(cat ~/.config/task-mgmt/path)/scripts/git-hooks"
+git add . && git commit -m "Initialize project: <working-title>"
 ```
+
+Setting `core.hooksPath` points this project's git hooks at the shared body in Task-Management (`scripts/git-hooks/`), so the citation lint runs on every commit with a single, centrally-maintained hook. `core.hooksPath` lives in `.git/config` (not committed), so it is re-set here at init for each project/checkout.
 
 If GitHub remote requested: `gh repo create "user/<project-name>" --private --source=. --remote=origin --push`.
 
@@ -263,3 +268,17 @@ Per the `multi-system-completeness` rule, partial state is the dominant failure 
 | `/audit-project-research` | **Must mirror this scaffold.** When init adds a new directory or convention, add a matching audit phase there and update `/atlas-audit` SA1. |
 | `/atlas-audit` | **Drift trigger:** new projects change theme dir counts — see `atlas-audit/references/drift-checks.md`. SA1 structure checks must stay consistent with this scaffold. |
 | [`references/domain-profile-template.md`](references/domain-profile-template.md) | Template for economics/field-specific domain profiles — copy to project's `docs/domain-profile.md` during init for economics papers. |
+
+## Citation Contract
+
+<!-- paperpile-citation-contract -->
+1. Paperpile is the only source of truth for committed citation keys and BibTeX metadata.
+2. Before writing `\cite{key}`, verify with `paperpile get-item key` and `paperpile export-bib key`.
+3. Resolve unknowns in order: DOI lookup → Paperpile substring search → `refpile` semantic search → Paperpile verify.
+4. A DOI miss is **not** non-membership; continue with title/author search and refpile.
+5. If unresolved, write `\CiteTodo{slug}{title/author/year/DOI hint}` — never a guessed key.
+6. Drafting sub-agents must not write/edit the active `.bib`; only the orchestrator regenerates it from Paperpile exports.
+7. Stage genuine new refs under `.paperpile-import/` for manual Paperpile import; don't cite until Paperpile mints the key.
+8. Run `scripts/bib/citation_lint.py` before commit; zero placeholders, zero non-Paperpile keys, zero hand-authored metadata.
+
+See `rules/paperpile-citations.md` for the full workflow.

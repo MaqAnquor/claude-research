@@ -44,7 +44,7 @@ Just say these naturally:
 | "Extract actions from my meeting with [name]" | Finds transcript, extracts tasks, creates in vault |
 | "Weekly review" | Guides you through reflection and planning |
 | "What's overdue?" | Queries vault tasks and summarises |
-| "Upcoming deadlines" / "What's due?" | Reads vault venue frontmatter via `conf-timeline list`. See [`docs/guides/conf-deadlines.md`](docs/guides/conf-deadlines.md) |
+| "Upcoming deadlines" / "What's due?" | Reads vault venue frontmatter via `conf-timeline list`. See `docs/guides/conf-deadlines.md` |
 | "Update my research pipeline" | Shows paper status, helps update stages |
 | "Find references on [topic]" | Academic search with verified citations |
 | "What did I accomplish this week?" | Summarises completed tasks |
@@ -111,24 +111,24 @@ IDs are filename slugs (e.g., `cancel-leap-water-in-rugby`), not integers.
 <!-- synced from private CLAUDE.md — do not edit manually -->
 Detailed instructions in `.context/workflows/`:
 - `daily-review.md` — How to help with daily planning
-- `meeting-actions.md` — How to extract action items (see also [`docs/guides/minutes.md`](docs/guides/minutes.md) for full meeting system architecture)
+- `meeting-actions.md` — How to extract action items (see also `docs/guides/minutes.md` for full meeting system architecture)
 - `weekly-review.md` — Weekly reflection template
 - `replication-protocol.md` — 4-phase protocol for replicating paper results
-- Feedback loop (skill improvement pipeline): [`docs/feedback-loop.md`](docs/feedback-loop.md)
+- Feedback loop (skill improvement pipeline): `docs/feedback-loop.md`
 <!-- WORKFLOWS-POINTER:END -->
 
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-50 skills in `skills/` folder. See [`docs/components/skills.md`](docs/components/skills.md) for the full catalogue.
+50 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
 
 ## Agents
 
-15 agents in `.claude/agents/`. See [`docs/components/agents.md`](docs/components/agents.md) for when to use each.
+15 agents in `.claude/agents/`. See [`docs/agents.md`](docs/agents.md) for when to use each.
 
 ## Rules (18 Auto-Loaded)
 
-In `.claude/rules/` — these apply automatically to every session. See [`docs/components/rules.md`](docs/components/rules.md) for documentation.
+In `.claude/rules/` — these apply automatically to every session. See [`docs/rules.md`](docs/rules.md) for documentation.
 
 <!-- RULES-TABLE:START -->
 | Rule | Purpose |
@@ -155,7 +155,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/c
 
 ## Hooks
 
-9 hook scripts in `hooks/`. See [`docs/components/hooks.md`](docs/components/hooks.md) for the full table.
+9 hook scripts in `hooks/`. See [`docs/hooks.md`](docs/hooks.md) for the full table.
 <!-- COMPONENTS:END -->
 
 ## After Every Session

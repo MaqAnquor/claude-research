@@ -73,3 +73,22 @@ you were about to do in your final summary. The orchestrator decides.
 - **Don't** assume "drafted a paper → compile + commit" is the natural sub-agent flow. It isn't. The orchestrator decides.
 - **Don't** rely on the sub-agent reading global rules — they don't auto-load in sub-agent context. Inline the forbid-list.
 - **Don't** dispatch a sub-agent with `Bash` and Edit access without an explicit forbid-list. Default permissions enable harmful side-effects.
+
+## Citation forbid-list clause (drafting sub-agents)
+
+<!-- paperpile-subagent-citation-clause -->
+Sub-agents that draft LaTeX MUST NOT mint citation keys or write the active `.bib`. Paste this verbatim into any drafting sub-agent's prompt (in addition to the standard forbid-list above):
+
+```
+You may draft prose, but you must NOT mint citation keys.
+Allowed: (1) use a key from APPROVED_CITATIONS exactly as given; (2) resolve a new
+key only via `paperpile lookup-by-doi`, `paperpile search-library`, `refpile
+search-library`, `paperpile get-item`, `paperpile export-bib`; (3) else write
+\CiteTodo{slug}{title; authors; year; DOI/hint}.
+Forbidden: inventing author-year/title keys (e.g. smith2020, weber1988, cox2012deep);
+writing @article/@book into the active .bib; using Crossref/OpenAlex metadata as an
+active .bib entry; silently replacing \CiteTodo with a guessed key.
+Return a CITES_USED list (key: how verified) and a CITE_TODOS list.
+```
+
+See `rules/paperpile-citations.md`.

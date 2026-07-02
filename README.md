@@ -70,9 +70,9 @@ Then customise `.context/profile.md`, `.context/current-focus.md`, and `CLAUDE.m
 | **Rules** | 18 | Always-on policies (plan before implementing, scope discipline, etc.) |
 | **Context library** | — | Structured files that give Claude persistent memory across sessions |
 | **Notion integration** | — | Task management and research pipeline tracking — [setup guide](docs/notion-setup.md) |
-| **Bibliography MCP** | — | Multi-source scholarly search (OpenAlex + Scopus + WoS) — [setup guide](docs/biblio-setup.md) |
+| **Bibliography MCP** | — | Multi-source scholarly search (OpenAlex + Scopus + WoS) — [setup guide](docs/bibliography-setup.md) |
 | **Council mode** | — | Multi-model deliberation (3 reviewers + synthesis) — [setup guide](docs/council-mode.md) |
-| **CLI tools** | — | Notion task management from the terminal — [docs](docs/components/scripts.md) |
+| **CLI tools** | — | Notion task management from the terminal — [docs](docs/scripts.md) |
 <!-- COMPONENT-TABLE:END -->
 
 ## Architecture
@@ -209,7 +209,7 @@ claude-research/
 │   ├── proofread/               # Academic proofreading
 │   ├── latex-autofix/           # LaTeX compilation + auto-fix
 │   ├── literature/              # Literature search + synthesis
-│   └── ...                      # See docs/components/skills.md for full list
+│   └── ...                      # See docs/skills.md for full list
 ├── hooks/                       # 9 automated guardrails
 ├── .context/                    # AI context library
 │   ├── profile.md               # Your identity and background

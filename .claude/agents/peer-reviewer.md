@@ -31,9 +31,9 @@ You are the **orchestrator** of a multi-agent peer review system. you are review
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `peer-reviewer`
-- **Write reports to:** `reviews/peer-reviewer/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/peer-reviewer/<YYYY-MM-DD-HHMM>.md` inside the project, where `<scope>` is the paper directory basename (e.g. `paper-ejor`) or `_project` if reviewing an external paper not tied to a project paper-dir. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
-- **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
+- **Idempotency:** if today's file exists, append a same-day descriptor (e.g. `2026-05-23-1042.md`, `2026-05-23-1100.md`) — never overwrite.
 - **Index update:** you do NOT update `reviews/INDEX.md` yourself. Emit the `review-state-stamp` directive at the end of your final response (see "Final Step" below) — the orchestrator parses it and appends the INDEX.md row.
 - **Infrastructure repos** (Task-Management, atlas-workspace, etc.): this section does not apply — the path-scoped rule won't load there.
 
@@ -215,7 +215,7 @@ When KA was run, include the file paths in each sub-agent's prompt so they can r
 
 ## Phase 3: Report Synthesis
 
-After collecting sub-agent reports, synthesise into the final referee report. Read `references/peer-reviewer/report-template.md` for the full report structure, novelty assessment guidance, and filing conventions. Save to `reviews/peer-reviewer/YYYY-MM-DD_[author]_[short_title]_report.md`.
+After collecting sub-agent reports, synthesise into the final referee report. Read `references/peer-reviewer/report-template.md` for the full report structure, novelty assessment guidance, and filing conventions. Save to `reviews/<scope>/peer-reviewer/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug or `_project` for external papers).
 
 ---
 
@@ -325,7 +325,7 @@ See `skills/shared/council-protocol.md` for the full orchestration protocol.
 
 ## Final Step — Emit Stamp Directive
 
-Write your peer review to `reviews/peer-reviewer/<YYYY-MM-DD-HHMM>.md` (`mkdir -p reviews/peer-reviewer/` first). You do NOT run any bash command to stamp `reviews/INDEX.md`. Instead, end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator (main session for direct dispatch; `/review-cluster`, `/pre-submission-report` for fan-out) parses this block and runs the stamping helper.
+Write your peer review to `reviews/<scope>/peer-reviewer/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper directory basename or `_project` for external papers; `mkdir -p reviews/<scope>/peer-reviewer/` first). You do NOT run any bash command to stamp `reviews/INDEX.md`. Instead, end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator (main session for direct dispatch; `/review-cluster`, `/pre-submission-report` for fan-out) parses this block and runs the stamping helper.
 
 **Read `skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
@@ -334,7 +334,7 @@ Your agent-specific values:
 - **check**: `peer-reviewer` (always)
 - **verdict**: exactly one of `ACCEPT`, `MINOR REVISION`, `MAJOR REVISION`, `REJECT`.
 - **paper**: the paper directory basename (e.g. `paper-ejor`), or `—` (em-dash) for external PDFs not tied to a project paper-dir.
-- **report**: `reviews/peer-reviewer/<YYYY-MM-DD-HHMM>.md` — the canonical timestamp form. Do not use `_report.md` suffixes (forbidden per `rules/review-artefact-routing.md` §R2).
+- **report**: `reviews/<scope>/peer-reviewer/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug from the `paper:` field above, or `_project` if `paper:` is `—`). The canonical timestamp form. Do not use `_report.md` suffixes (forbidden per `rules/review-artefact-routing.md` §R2).
 - **score**: `n/100` form, or `—` if no numeric score produced.
 - **open_issues**: total Major + Minor at run time (snapshot), in `n/n` form.
 - **notes**: one line, ≤120 chars, no pipes, no newlines.
@@ -348,7 +348,7 @@ paper: paper-ejor
 verdict: MAJOR REVISION
 score: 64/100
 open_issues: 11/11
-report: reviews/peer-reviewer/2026-05-23-1042.md
+report: reviews/paper-ejor/peer-reviewer/2026-05-23-1042.md
 notes: Identification strategy underpowered; 3 citations hallucinated; novelty overlaps Jiang 2024
 ```
 ````

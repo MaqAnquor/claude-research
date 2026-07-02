@@ -2,7 +2,7 @@
 name: reproducibility-auditor
 fidelity: high
 oversight: high
-description: "Reviews research workflows for reproducibility gaps — hidden dependencies, absolute paths, undocumented prerequisites, environment assumptions, and output traceability. Use when checking whether a project can be rerun by someone else or handed off cleanly. Read-only with respect to project files; writes its own report at `reviews/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md`.\n\nExamples:\n\n- Example 1:\n  user: \"Can someone else rerun this project?\"\n  assistant: \"I'll launch the reproducibility-auditor to check for hidden dependencies and handoff readiness.\"\n  <commentary>\n  Reproducibility check. Launch reproducibility-auditor.\n  </commentary>\n\n- Example 2:\n  user: \"Audit my replication package for rerunnability\"\n  assistant: \"Let me launch the reproducibility-auditor to check paths, dependencies, and traceability.\"\n  <commentary>\n  Replication audit. Launch reproducibility-auditor.\n  </commentary>\n\n- Example 3:\n  user: \"I'm handing this project to a co-author\"\n  assistant: \"I'll launch the reproducibility-auditor to check it's rerunnable on another machine.\"\n  <commentary>\n  Handoff readiness check. Launch reproducibility-auditor.\n  </commentary>"
+description: "Reviews research workflows for reproducibility gaps — hidden dependencies, absolute paths, undocumented prerequisites, environment assumptions, and output traceability. Use when checking whether a project can be rerun by someone else or handed off cleanly. Read-only with respect to project files; writes its own report at `reviews/<scope>/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug or `_project`).\n\nExamples:\n\n- Example 1:\n  user: \"Can someone else rerun this project?\"\n  assistant: \"I'll launch the reproducibility-auditor to check for hidden dependencies and handoff readiness.\"\n  <commentary>\n  Reproducibility check. Launch reproducibility-auditor.\n  </commentary>\n\n- Example 2:\n  user: \"Audit my replication package for rerunnability\"\n  assistant: \"Let me launch the reproducibility-auditor to check paths, dependencies, and traceability.\"\n  <commentary>\n  Replication audit. Launch reproducibility-auditor.\n  </commentary>\n\n- Example 3:\n  user: \"I'm handing this project to a co-author\"\n  assistant: \"I'll launch the reproducibility-auditor to check it's rerunnable on another machine.\"\n  <commentary>\n  Handoff readiness check. Launch reproducibility-auditor.\n  </commentary>"
 tools:
   - Read
   - Glob
@@ -29,7 +29,7 @@ You are distinct from `code-paper-auditor` (which verifies number consistency) a
 Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-scoped to `paper-*/` and `paper/`)):
 
 - **Source slug:** `reproducibility-auditor`
-- **Write reports to:** `reviews/reproducibility-auditor/YYYY-MM-DD.md` inside the project. Path is relative to the research project root, not the Task-Management repo.
+- **Write reports to:** `reviews/<scope>/reproducibility-auditor/YYYY-MM-DD.md` inside the project, where `<scope>` is the paper slug (e.g., `paper-jtp`) for paper-level reviews or `_project` for project-level reviews. Path is relative to the research project root, not the Task-Management repo.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if today's file exists, append a same-day descriptor (`{date}-revision.md`, `{date}-r2.md`, `{date}-pre-submission.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `/review-recap` will rebuild the index next time it runs.
@@ -85,7 +85,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 
 ## Output
 
-Write the report to `reviews/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` in the **project root** using the Write tool. Create the directory if needed (Write creates parent dirs). NO `_REPRODUCIBILITY-REPORT.md` suffix — forbidden per `rules/review-artefact-routing.md` §R2. The path here MUST match the canonical Output Path above (line ~32); discrepancies between the two are the root cause of agent file-write skips (see `log/2026-05-21-blindspot-write-fix.md`).
+Write the report to `reviews/<scope>/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` in the **project root** using the Write tool, where `<scope>` is the paper slug from the dispatch context or `_project` for project-level reviews. Create the directory if needed (Write creates parent dirs). NO `_REPRODUCIBILITY-REPORT.md` suffix — forbidden per `rules/review-artefact-routing.md` §R2. The path here MUST match the canonical Output Path above (line ~32); discrepancies between the two are the root cause of agent file-write skips (see `log/2026-05-21-blindspot-write-fix.md`).
 
 ```markdown
 # Reproducibility Audit Report
@@ -148,7 +148,7 @@ Write the report to `reviews/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` in th
 - Note scripts that appear exploratory (dated filenames, "test_", "scratch_", "old_")
 
 ### DO NOT
-- Modify the paper, code, configs, or any project file — you are **read-only with respect to the author's project files**, but you DO write your own report at `reviews/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` (that's the audit's deliverable; skipping the Write call leaves the orchestrator with nothing on disk to stamp)
+- Modify the paper, code, configs, or any project file — you are **read-only with respect to the author's project files**, but you DO write your own report at `reviews/<scope>/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` (that's the audit's deliverable; skipping the Write call leaves the orchestrator with nothing on disk to stamp)
 - Run code — you audit by reading (use Bash only for `ls`, `find`, `wc` — never execute project scripts)
 - Access `data/raw/` contents — check that the path exists and is documented, don't inspect restricted data
 - Conflate your role with code-paper-auditor (numbers) or artifact-coherence-auditor (claim coverage)
@@ -179,7 +179,7 @@ Your agent-specific values:
 
 - **check**: `reproducibility-auditor` (always)
 - **verdict**: exactly `PASS` or `GAPS FOUND`. PASS if no reproducibility gaps; GAPS FOUND if hidden dependencies, absolute paths, undocumented prerequisites, or output-traceability holes exist.
-- **report**: `reviews/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md`
+- **report**: `reviews/<scope>/reproducibility-auditor/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper slug or `_project`)
 - **score**: this agent does not produce a numeric score — use `—` (em-dash)
 - **open_issues**: total reproducibility gaps at run time (e.g. `4/4`)
 
@@ -192,7 +192,7 @@ paper: paper-eaamo
 verdict: GAPS FOUND
 score: —
 open_issues: 4/4
-report: reviews/reproducibility-auditor/2026-05-19-1437.md
+report: reviews/paper-eaamo/reproducibility-auditor/2026-05-19-1437.md
 notes: 3 absolute paths in scripts/; missing requirements.txt; R version not pinned
 ```
 ````

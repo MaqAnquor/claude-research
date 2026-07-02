@@ -57,7 +57,7 @@ For syncing an existing book to a paper revision, use `/audit-paper-book` instea
 ## Inputs accepted
 
 ```
-/init-paper-book <project-path>          # full path to project dir, e.g. /Volumes/SSD/Dropbox/Research/ASG/audit-gaming-benchmark
+/init-paper-book <project-path>          # full path to project dir, e.g. ~/Research/<theme>/<project-slug>
 /init-paper-book <slug>                  # atlas slug; resolved via atlas topic file's project_path
 /init-paper-book <slug> --dry-run        # plan only, no writes
 /init-paper-book <slug> --autonomous     # or -y: 4 phases end-to-end, no inter-phase pauses (see Autonomy below)
@@ -184,7 +184,7 @@ If anything looks visually wrong (callouts not rendering, math not rendering, fi
 - Figure path wrong — should be `figures/<filename>` relative to chapter
 - Bib file missing or in wrong format — references chapter shows "No references" if `_parse_bib` returns []
 
-When the rendered output is ready, suggest committing the vault changes (`git add ~/Research-Vault/books/<slug>` from the vault repo if it's tracked) and announce: "Live at https://books.user.com/<slug>/intro".
+When the rendered output is ready, suggest committing the vault changes (`git add ~/Research-Vault/books/<slug>` from the vault repo if it's tracked) and announce: "Live at https://books.user.com/<slug>" — the landing URL now renders a cover/frontispiece page (title, "Companion to <paper>", authors, venue, table of contents, and a **Start reading →** link to the first chapter) instead of redirecting straight into the intro.
 
 ## Logging
 

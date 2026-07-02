@@ -7,10 +7,10 @@ After collecting all sub-agent reports, synthesise everything into the final ref
 Save the report to:
 
 ```
-reviews/peer-reviewer/YYYY-MM-DD_[author]_[short_title]_report.md
+reviews/<paper_slug>/peer-reviewer/YYYY-MM-DD-HHMM.md
 ```
 
-Create the `reviews/peer-reviewer/` directory if it does not exist. Do NOT overwrite previous reports — each review is dated.
+where `<paper_slug>` is the slug of the paper being reviewed (passed to you in the dispatch prompt or read from the INDEX Paper column). Create the `reviews/<paper_slug>/peer-reviewer/` directory if it does not exist. Do NOT overwrite previous reports — each review is timestamped uniquely.
 
 ## Report Structure
 
